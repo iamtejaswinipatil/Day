@@ -1,3 +1,65 @@
-m1
-m2
-m3
+AKIAQ3EGSNTWGNDLBYE3
+42rqiBn3aJsrAhyqSB43ngW5tO4S+IEVKZ+0k9EJ
+
+provider "aws" {
+  region     = "ap-south-1"
+  access_key = "AKIAQ3EGSNTWGNDLBYE3"
+  secret_key = "42rqiBn3aJsrAhyqSB43ngW5tO4S+IEVKZ+0k9EJ"
+}
+
+resource "aws_instance" "example-1" {
+  ami             = "ami-08ee1453725d19cdb"
+  instance_type   = "t2.micro"
+  key_name        = "devill"
+  count           = "1"
+    tags = {
+       Name = "task-1"
+  }
+}
+
+output "public_ip"{
+  value = aws_instance.example-1[0].public_ip
+}
+output "private_ip"{
+  value = aws_instance.example-1[0].private_ip
+}
+
+ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  # "-1" means all protocols
+    cidr_blocks = ["0.0.0.0/0"]  # Allow traffic from all IP addresses
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  # "-1" means all protocols
+    cidr_blocks = ["0.0.0.0/0"]  # Allow traffic to all IP addresses
+  }
+resource "aws_security_group" "example_sg" {
+  tags = {
+  - Name = "securityexample"
+  }
+=================================================================================
+ingress {
+         from_port   = 0
+         to_port     = 0
+         protocol    = "-1"
+         cidr_blocks = ["0.0.0.0/0"]
+        }
+egress {
+        from port    = 0
+        to_port      = 0
+        protocol     = "-1"
+        cidr_blocks  = ["0.0.0.0/0"]
+       }
+}
+================================================================================
+#!/bin/bash
+
+yum update -y
+yum install httpd -y
+systemctl start httpd
+systemctl enable httpd
